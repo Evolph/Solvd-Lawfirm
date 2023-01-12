@@ -92,4 +92,6 @@ public class CaseFile extends File {
                 ", status=" + status + '\'' +
                 '}';
     }
+
+
 }

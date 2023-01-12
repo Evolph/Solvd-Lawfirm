@@ -1,3 +1,5 @@
+package com.solvd.business.exceptions;
+
 public class InsufficientFundsException extends Exception {
     private String desc;
 

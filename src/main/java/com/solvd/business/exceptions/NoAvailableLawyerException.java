@@ -1,3 +1,5 @@
+package com.solvd.business.exceptions;
+
 public class NoAvailableLawyerException extends Exception {
 
     private String desc;

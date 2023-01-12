@@ -4,17 +4,18 @@ import com.solvd.business.interfaces.IHire;
 import com.solvd.business.persons.Person;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
-public class Department implements IHire {
+public class Department <T extends Collection<Person>> implements IHire{
     private int id;
     private String name;
-    private ArrayList<Person> employees;
+    private T employees;
 
     private ArrayList<File> files;
 
 
-    public Department(int id, String name, ArrayList<Person> employees) {
+    public Department(int id, String name, T employees) {
         this.id = id;
         this.name = name;
         this.employees = employees;
@@ -36,11 +37,11 @@ public class Department implements IHire {
         this.name = name;
     }
 
-    public ArrayList<Person> getEmployees() {
+    public T getEmployees() {
         return employees;
     }
 
-    public void setEmployees(ArrayList<Person> employees) {
+    public void setEmployees(T employees) {
         this.employees = employees;
     }
 

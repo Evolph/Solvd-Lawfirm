@@ -1,3 +1,5 @@
+package com.solvd.business.exceptions;
+
 public class EmptyDepartmentException extends Exception {
 
     private String desc;

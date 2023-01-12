@@ -1,3 +1,5 @@
+package com.solvd.business.exceptions;
+
 public class InvalidCaseFileIdException extends Exception {
 
     private String desc;
