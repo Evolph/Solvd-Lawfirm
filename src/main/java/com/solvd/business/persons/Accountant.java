@@ -9,7 +9,8 @@ public class Accountant extends Person implements IAccount {
         super(id, name, address);
     }
 
-    public void account(float costs, CaseFile casefile) {
+    public void account(int minHours, float minWork, float hourlyRate,  CaseFile casefile){
+        float costs = (minHours * hourlyRate) + minWork;
         casefile.edit(costs);
     }
 }

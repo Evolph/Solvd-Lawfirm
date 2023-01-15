@@ -1,6 +1,10 @@
 package com.solvd.business;
 
-import com.solvd.business.exceptions.InvalidDepartmentIDException;
+import com.solvd.business.enums.CommercialCaseTypes;
+import com.solvd.business.enums.CriminalCaseTypes;
+import com.solvd.business.enums.FamilyCaseTypes;
+import com.solvd.business.exceptions.InvalidIDException;
+import com.solvd.business.lawfirm.CaseFile;
 import com.solvd.business.lawfirm.Department;
 import com.solvd.business.lawfirm.LawFirm;
 import com.solvd.business.persons.*;
@@ -21,7 +25,7 @@ public class Main {
 
 
 
-        Client client = new Client(1, "Fernando Bordon", "Jose Cubas 123", 3000);
+        Client client = new Client(1, "Fernando Bordon", "Jose Cubas 123", 50000);
         Lawyer familyLawyer1 = new Lawyer(100, "Guido Birato", "Venezuela 2231", "Family Law", 150);
         Lawyer familyLawyer2 = new Lawyer(101, "Carlos Puccio", "Concordia 456", "Family Law", 250);
         Lawyer commercialLawyer1 = new Lawyer(200, "Judith Fraga", "Libertad 656", "Commercial Law", 200);
@@ -38,45 +42,99 @@ public class Main {
         ArrayList<Person> criminalEmployees = new ArrayList<>();
         ArrayList<Person> accountingEmployees = new ArrayList<>();
         ArrayList<Person> investigationEmployees = new ArrayList<>();
+        ArrayList<Person> paralegalEmployees = new ArrayList<>();
         Department familyLaw = new Department(700, "Family Law", familyEmployees);
         Department commercialLaw = new Department(701, "Commercial Law", commercialEmployees);
         Department criminalLaw = new Department(702, "Criminal Law", criminalEmployees);
         Department accounting = new Department(703, "Accounting", accountingEmployees);
         Department investigations = new Department(704, "Investigations", investigationEmployees);
+        Department paralegals = new Department(705, "Paralegals", paralegalEmployees);
+        CaseFile clientCase = new CaseFile();
         familyLaw.hire(familyLawyer1);
         familyLaw.hire(familyLawyer2);
-        familyLaw.hire(paralegal1);
         commercialLaw.hire(commercialLawyer1);
         commercialLaw.hire(commercialLawyer2);
-        familyLaw.hire(paralegal2);
         criminalLaw.hire(criminalLawyer1);
         criminalLaw.hire(criminalLawyer2);
-        familyLaw.hire(paralegal3);
         accounting.hire(accountant);
         investigations.hire(investigator);
+        paralegals.hire(paralegal1);
+        paralegals.hire(paralegal2);
+        paralegals.hire(paralegal3);
         LawFirm law = new LawFirm("Kilmister Law");
         law.addDepartment(familyLaw);
         law.addDepartment(commercialLaw);
         law.addDepartment(criminalLaw);
         law.addDepartment(accounting);
         law.addDepartment(investigations);
+        String type;
 
         LOGGER.info("Welcome to "+law.getName());
         LOGGER.info("How can we help you?");
         Collection<Department> cp = law.getDepartments();
         for(Department d: cp){
-            LOGGER.info("ID: "+ d.getId()+ " - Name: " +d.getName());
+            if(d.getId()<703) LOGGER.info("ID: "+ d.getId()+ " - Name: " +d.getName());
         }
         LOGGER.info("Choose Department by ID: ");
         try{
-            int option = scanner.nextInt();
-            Department chosenDept= chooseDepartment(law, option);
-            LOGGER.info("Choose a Lawyer from the" + chosenDept.getName());
+            int deptID = scanner.nextInt();
+            Department chosenDept= chooseDepartment(law, deptID);
+            LOGGER.info("Choose a Lawyer from the" + chosenDept.getName() + "Department: ");
             Collection<Lawyer> cl = chosenDept.getEmployees();
             for(Lawyer l : cl){
-                //LOGGER.info("ID: "+ l.getId() + "- Name: "+l.getName() + " - Hourly Rate: " + l.getHourlyRate());
+                LOGGER.info("ID: "+ l.getId() + "- Name: "+l.getName() + " - Hourly Rate: " + l.getHourlyRate());
             }
-        }catch(InvalidDepartmentIDException e){
+            LOGGER.info("Choose Lawyer by ID: ");
+            int option = scanner.nextInt();
+            scanner.nextLine();
+            Lawyer chosenLawyer = chooseLawyer(cl, option);
+            LOGGER.info("Choose type of assistance: ");
+            switch(deptID){
+                case 700:
+                    for(FamilyCaseTypes f: FamilyCaseTypes.values())
+                    {
+                        LOGGER.info(f.getDescription() + ": "+ f.getFee()+"$ fee. Minimum work: "+ f.getMinimumHours()+ " hours");
+                    }
+                    type= scanner.nextLine();
+                    for(FamilyCaseTypes f: FamilyCaseTypes.values()){
+                     if(type.toUpperCase().equals(f.getDescription())){
+                         paralegal1.work(1, client.getName()+"'s Case", f.getDescription(), option, client.getId(), paralegal1.getId(), clientCase);
+                         accountant.account(f.getMinimumHours(),f.getFee(), chosenLawyer.getHourlyRate(), clientCase);
+                     }
+                    }
+
+                    break;
+                case 701:
+                    for(CommercialCaseTypes f: CommercialCaseTypes.values())
+                    {
+                        LOGGER.info(f.getDescription() + ": "+ f.getFee()+"$ fee. Minimum work: "+ f.getMinimumHours()+ " hours");
+                    }
+                    type= scanner.nextLine();
+                    for(CommercialCaseTypes f: CommercialCaseTypes.values()){
+                        if(type.toUpperCase().equals(f.getDescription())){
+                            paralegal2.work(1, client.getName()+"'s Case", f.getDescription(), option, client.getId(), paralegal2.getId(), clientCase);
+                            accountant.account(f.getMinimumHours(),f.getFee(), chosenLawyer.getHourlyRate(), clientCase);
+                        }
+                    }
+                    break;
+                case 702:
+                    for(CriminalCaseTypes f: CriminalCaseTypes.values())
+                    {
+                        LOGGER.info(f.getDescription() + ": "+ f.getFee()+"$ fee. Minimum work: "+ f.getMinimumHours()+ " hours");
+                    }
+                    type= scanner.nextLine();
+                    for(CriminalCaseTypes f: CriminalCaseTypes.values()){
+                        if(type.toUpperCase().equals(f.getDescription())){
+                            paralegal3.work(1, client.getName()+"'s Case", f.getDescription(), option, client.getId(), paralegal3.getId(), clientCase);
+                            accountant.account(f.getMinimumHours(),f.getFee(), chosenLawyer.getHourlyRate(), clientCase);
+                        }
+                    }
+                    break;
+            }
+            LOGGER.info("Working on your case will cost you: " + clientCase.getCurrentCost());
+
+
+        }catch(InvalidIDException e){
             LOGGER.error("Caught exception " + e);
         }
 
@@ -84,13 +142,28 @@ public class Main {
 
     }
 
-    public static Department chooseDepartment(LawFirm law, int option) throws InvalidDepartmentIDException{
+    public static Department chooseDepartment(LawFirm law, int option) throws InvalidIDException {
         Department d = law.getDepartmentByID(option);
         if(d == null){
-            throw  new InvalidDepartmentIDException("Invalid Department ID", "Invalid ID");
+            throw  new InvalidIDException("Invalid Department ID", "Invalid Department ID");
         }
 
         return d;
     }
+
+    public static Lawyer chooseLawyer(Collection<Lawyer> lawyers, int option) throws InvalidIDException {
+        Lawyer l = null;
+        for(Lawyer x: lawyers){
+            if(x.getId()==option){
+                l = x;
+            }
+        }
+
+        if(l == null){
+            throw new InvalidIDException("Invalid Lawyer ID", "Invalid Lawyer ID");
+        }
+        return l;
+    }
+
 }
 

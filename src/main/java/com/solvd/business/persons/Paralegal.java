@@ -12,8 +12,8 @@ public class Paralegal extends Person implements IWork {
         this.setAddress(address);
     }
 
-    public void work(String update, CaseFile casefile) {
-        casefile.edit(update);
+    public void work(int id, String name, String description, int lawyerID, int clientID, int paralegalID, CaseFile casefile) {
+        casefile.edit(id,  name,  description,  lawyerID,  clientID,  paralegalID);
     }
 
 }
